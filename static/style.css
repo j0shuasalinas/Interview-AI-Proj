@@ -1,17 +1,18 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: white;
+    background: linear-gradient(145deg, #2e003e, #4b0082);
     margin: 0;
     padding: 20px;
+    color: #fff;
 }
 
 .container {
-    max-width: 600px;
+    max-width: 800px;
     margin: auto;
     padding: 20px;
-    background: #4e597a;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+    background: #3b3b58;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
 #chat-container {
@@ -19,72 +20,40 @@ body {
     height: 300px;
     width: 96%;
     overflow-y: auto;
-    background-color: rgb(96, 129, 183);
-    border: 5px solid #3b4563;
+    background-color: #4b006e;
+    border: 2px solid #a150f4;
     padding: 10px;
     margin-bottom: 10px;
+    border-radius: 8px;
 }
 
 .moving-image {
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 50px;
+    width: 70px;
     height: auto;
 }
 
-.moving-image.animate {
-    animation: float 3s ease-in-out infinite; /* Apply the animation */
-}
-
-@keyframes float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-    100% { transform: translateY(0); }
-}
-
-.message {
-    margin: 5px 0;
-}
-
-.user-message {
-    text-align: right;
-    color: rgb(255, 255, 255);
-}
-
-.bot-message {
-    text-align: left;
-    color: rgb(0, 0, 0);
-}
-
 .editor-container {
-    height: 300px;
+    height: 400px;  /* Make editor box taller */
     width: 100%;
-    background-color: #3b4563 !important;
-    border: 5px solid #3b4563;
+    background-color: #2b2d42;
+    border: 2px solid #a150f4;
     margin-bottom: 20px;
+    border-radius: 8px;
 }
 
-.editor-container .CodeMirror {
-    background-color: rgb(96, 129, 183) !important;
-    color: #D3D3D3 !important;
+#user-input {
+    width: calc(100% - 90px);
+    padding: 10px;
+    border: 1px solid #a150f4;
+    border-radius: 5px;
+    margin-right: 10px;
 }
 
-/* Style the entire line number column */
-.CodeMirror-gutter {
-    background-color: rgb(88, 110, 145); /* Match the editor's background */
-    color: rgb(0, 0, 0); /* Color for the line numbers */
-}
-
-/* Line Number Styling */
-.CodeMirror .CodeMirror-linenumber {
-    color: white; /* Line numbers color */
-    background-color: transparent; /* Make individual line numbers transparent */
-}
-
-/* Button Styling */
-#send-button {
-    background-color: #4e597a;
+#send-button, #audio-toggle-button {
+    background-color: #a150f4;
     color: white;
     border: none;
     border-radius: 5px;
@@ -93,6 +62,6 @@ body {
     transition: background-color 0.3s;
 }
 
-#send-button:hover {
-    background-color: #3c4758;
+#send-button:hover, #audio-toggle-button:hover {
+    background-color: #822bbf;
 }

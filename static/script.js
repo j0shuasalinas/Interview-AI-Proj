@@ -1,14 +1,28 @@
-// Wait until the DOM is fully loaded before initializing CodeMirror
 document.addEventListener('DOMContentLoaded', () => {
     const editor = CodeMirror(document.getElementById("editor"), {
         mode: "javascript",
         lineNumbers: true,
-        theme: "default"
+        theme: "default",
+        viewportMargin: Infinity  // To make the code box expand
     });
 
-    function sendMessage() {
-        console.log("sendMessage function triggered"); // For debugging
+    let audioEnabled = false;
+    const audioToggleButton = document.getElementById("audio-toggle-button");
 
+    audioToggleButton.addEventListener("click", () => {
+        audioEnabled = !audioEnabled;
+        audioToggleButton.textContent = audioEnabled ? "🔊 Audio On" : "🔇 Audio Off";
+    });
+
+    function textToSpeech(text) {
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1; // Adjust as needed
+        utterance.pitch = 1; // Adjust as needed
+        synth.speak(utterance);
+    }
+
+    function sendMessage() {
         const userInput = document.getElementById("user-input").value;
         const codeInput = editor.getValue();
 
@@ -16,39 +30,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addMessageToChat(userInput, 'user');
 
-        const movingImage = document.querySelector('.moving-image');
-        if (movingImage) {
-            movingImage.src = "https://i.gifer.com/9fxG.gif";
-            movingImage.classList.add('animate');
-        }
-
         fetch('/chat', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message: userInput, code: codeInput }),
         })
         .then(response => response.json())
         .then(data => {
             if (data.response) {
                 addMessageToChat(data.response, 'bot');
+                if (audioEnabled) {
+                    textToSpeech(data.response);
+                }
             } else if (data.error) {
                 addMessageToChat("Error: " + data.error, 'bot');
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+        .catch(error => console.error('Error:', error));
 
-        document.getElementById("user-input").value = ""; 
-
-        setTimeout(() => {
-            if (movingImage) {
-                movingImage.classList.remove('animate');
-                movingImage.src = "https://i.gifer.com/9fxG.gif";
-            }
-        }, 3000); 
+        document.getElementById("user-input").value = "";
     }
 
     function addMessageToChat(message, sender) {
@@ -60,13 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Event listener for Enter key
+    document.getElementById("send-button").addEventListener("click", sendMessage);
     document.getElementById("user-input").addEventListener("keypress", function(event) {
-        if (event.key === "Enter") {
-            sendMessage();
-        }
+        if (event.key === "Enter") sendMessage();
     });
-
-    // Event listener for Send button
-    document.getElementById("send-button").addEventListener("click", sendMessage); // Placed outside the function
 });

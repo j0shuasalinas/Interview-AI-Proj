@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Set up your OpenAI API key
-openai.api_key = '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'
+openai.api_key = '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'
 @app.route('/')
 def index():
     return render_template('index.html')  # Make sure this points to your HTML file
@@ -18,8 +18,8 @@ def chat():
 
     # Adjust the prompt format for chat-based models
     messages = [
-        {"role": "system", "content": "You are a job interview chatbot."},
-        {"role": "user", "content": f"The user says: '{user_message}' and their code: '{code}'."}
+        {"role": "system", "content": "You are a chatbot assisting with job interview preparation. Provide a relevant leet code problem only if it would help the user."},
+        {"role": "user", "content": f"The user says: '{user_message}' and their code: '{code}'. Make sure to help them"}
     ]
 
     try:
