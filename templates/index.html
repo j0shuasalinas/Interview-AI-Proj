@@ -11,28 +11,16 @@
     <div class="container">
         <h1>Interview AI Chatbot</h1>
         <div id="chat-container">
-            <!-- Initially displays the still image with the mouth closed -->
-            <img id="moving-image" src="https://i.imgur.com/wglVwlO.gif" class="moving-image">
         </div>
-    
-        <!-- Code Editor -->
         <div class="editor-container" id="editor"></div>
-    
-        <!-- Send Code button -->
-        <button id="send-code-button">Send Code</button>
-    
-        <!-- Output box where the code execution result will appear -->
-        <div id="output-box" class="output-box"></div>
-    
-        <!-- User input text box -->
         <input type="text" id="user-input" placeholder="Type your message or code here...">
-    
-        <!-- Send message button -->
         <button id="send-button">Send</button>
+        <button id="audio-toggle-button">🔊 Toggle Audio</button>
     </div>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/codemirror.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.0/mode/javascript/javascript.min.js" defer></script>
-    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

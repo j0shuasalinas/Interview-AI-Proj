@@ -2,12 +2,24 @@ from flask import Flask, request, jsonify, render_template
 import openai
 import os
 import subprocess
-import traceback
+import random
 
 app = Flask(__name__)
 
-# Set up your OpenAI API key (Note: It's a good idea to store your API key in environment variables for security)
-openai.api_key = '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'
+# Set up your OpenAI API key (Note: Store API keys in environment variables for security)
+openai.api_key = 'proj-JGqTy7jUx6rXveWL7_laaRCBqlR1WLjvKjkKhbUTVJ0qp1X9J40BID9h1GiH5DIQQ-KVaY4cIJT3BlbkFJ8kW45uL8XDk2iU3DJZhSCLgjwxJ0FewxRNgXLTjAyWdtPNXSxxEcDAD4X3QkV3nWrsiekZJ8UA'
+
+# File containing Python questions
+QUESTIONS_FILE = "python_question.txt"
+
+# Utility function to load questions from the file
+def load_questions():
+    try:
+        with open(QUESTIONS_FILE, 'r') as file:
+            questions = [line.strip() for line in file if line.strip()]
+        return questions
+    except FileNotFoundError:
+        return ["Could not find the question file."]  # Fallback message
 
 # Serve the main HTML page
 @app.route('/')
@@ -36,15 +48,21 @@ def chat():
 
     if code:  # If code is provided, run it
         try:
-            result = run_python_code(code)  # Run the code through the /run_code endpoint
+            result = run_python_code(code)
             return jsonify({'response': result})
         except Exception as e:
             return jsonify({'error': str(e)}), 500
 
-    # Otherwise, handle as a message for the chat model
+    # Load Python questions from the file
+    questions = load_questions()
+    
+    # Select a random question from the file
+    selected_question = random.choice(questions)
+
+    # Construct chatbot response
     messages = [
         {"role": "system", "content": "You are a Python mock interview chatbot."},
-        {"role": "user", "content": f"The user says: '{user_message}' and their code: '{code}'."}
+        {"role": "user", "content": f"The user says: '{user_message}'. Ask a Python-related question: {selected_question}"}
     ]
 
     try:
@@ -57,14 +75,13 @@ def chat():
         )
 
         gpt_response = response['choices'][0]['message']['content'].strip()
-        return jsonify({'response': gpt_response})
+        return jsonify({'response': gpt_response, 'question': selected_question})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 # Utility function to run Python code
 def run_python_code(code):
     try:
-        # Running the Python code with subprocess
         result = subprocess.run(['python3', '-c', code], capture_output=True, text=True, check=True)
         return result.stdout
     except subprocess.CalledProcessError as e:

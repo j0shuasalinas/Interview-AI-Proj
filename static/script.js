@@ -1,94 +1,68 @@
 document.addEventListener('DOMContentLoaded', () => {
     const editor = CodeMirror(document.getElementById("editor"), {
-        mode: "python", // Set to Python mode
+        mode: "javascript",
         lineNumbers: true,
-        theme: "default"
+        theme: "default",
+        viewportMargin: Infinity  // To make the code box expand
     });
 
-    const movingImage = document.getElementById("moving-image");
-    const outputContainer = document.getElementById("output-container");
+    let audioEnabled = false;
+    const audioToggleButton = document.getElementById("audio-toggle-button");
 
-    // Function to switch to GIF
-    function switchToGif() {
-        movingImage.src = "https://i.gifer.com/9fxG.gif"; // Change to GIF URL
+    audioToggleButton.addEventListener("click", () => {
+        audioEnabled = !audioEnabled;
+        audioToggleButton.textContent = audioEnabled ? "🔊 Audio On" : "🔇 Audio Off";
+    });
+
+    function textToSpeech(text) {
+        const synth = window.speechSynthesis;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 1; // Adjust as needed
+        utterance.pitch = 1; // Adjust as needed
+        synth.speak(utterance);
     }
 
-    // Function to switch back to static image
-    function switchToStatic() {
-        movingImage.src = "https://i.imgur.com/wglVwlO.gif"; // Change to static image
-    }
-
-    // Function to send message or code
-    function sendMessage(isCode = false) {
-        console.log("sendMessage function triggered");
-
+    function sendMessage() {
         const userInput = document.getElementById("user-input").value;
         const codeInput = editor.getValue();
 
-        const messageContent = isCode ? codeInput : userInput;
-        if (messageContent.trim() === "") return;
+        if (userInput.trim() === "" && codeInput.trim() === "") return;
 
-        addMessageToChat(messageContent, 'user', isCode);
-
-        const payload = {
-            message: isCode ? '' : userInput,
-            code: isCode ? codeInput : ''
-        };
+        addMessageToChat(userInput, 'user');
 
         fetch('/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
+            body: JSON.stringify({ message: userInput, code: codeInput }),
         })
         .then(response => response.json())
         .then(data => {
-            switchToGif();  // Show GIF while processing
-
             if (data.response) {
                 addMessageToChat(data.response, 'bot');
+                if (audioEnabled) {
+                    textToSpeech(data.response);
+                }
             } else if (data.error) {
                 addMessageToChat("Error: " + data.error, 'bot');
             }
-
-            // If code was run, show the output in the output-container
-            if (data.output) {
-                displayCodeOutput(data.output);
-            }
-
-            setTimeout(switchToStatic, 3000); // Switch back to static image after a delay
         })
         .catch(error => console.error('Error:', error));
 
-        if (!isCode) document.getElementById("user-input").value = "";
+        document.getElementById("user-input").value = "";
     }
 
-    // Add message to the chat
-    function addMessageToChat(message, sender, isCode = false) {
+    function addMessageToChat(message, sender) {
         const chatContainer = document.getElementById("chat-container");
         const messageElement = document.createElement("div");
         messageElement.classList.add("message", `${sender}-message`);
-
-        if (isCode) {
-            messageElement.classList.add("code-message");
-            messageElement.innerHTML = `<pre>${message}</pre>`;
-        } else {
-            messageElement.textContent = message;
-        }
-
+        messageElement.textContent = message;
         chatContainer.appendChild(messageElement);
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Display the code output in the output container
-    function displayCodeOutput(output) {
-        outputContainer.textContent = "Output:\n" + output;
-    }
-
-    // Event listeners
+    document.getElementById("send-button").addEventListener("click", sendMessage);
     document.getElementById("user-input").addEventListener("keypress", function(event) {
         if (event.key === "Enter") sendMessage();
     });
-
-    document.getElementById("send-button").addEventListener("click", () => sendMessage());
-    document.getElementById("send-code-button").addEventListener("click", () => sendMessage(true));
 });
+/* hi*/
