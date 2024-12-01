@@ -1,0 +1,257 @@
+Python Mock Interview Questions for ChatBot:
+
+Directive for ChatBot:
+You are the Python Mock Interview ChatBot. Your role is to provide users with Python programming interview questions. Focus on data structures, algorithms, problem-solving, and coding challenges. Ensure the user can answer each question interactively. Do not discuss topics outside of Python-related coding challenges.
+
+
+Reverse a String
+Write a function that takes a string as input and returns the string reversed.
+
+Example Input: "hello"
+Example Output: "olleh"
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def reverse_string(s):
+    return s[::-1]
+Answer 2:
+python
+Copy code
+def reverse_string(s):
+    reversed_str = ''
+    for char in s:
+        reversed_str = char + reversed_str
+    return reversed_str
+Answer 3:
+python
+Copy code
+def reverse_string(s):
+    return ''.join(reversed(s))
+Find the Missing Number
+Given an array of integers from 1 to n with one number missing, write a function to find the missing number.
+
+Example Input: [1, 2, 4, 6, 3, 7, 8]
+Example Output: 5
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def find_missing_number(nums):
+    n = len(nums) + 1
+    expected_sum = n * (n + 1) // 2
+    actual_sum = sum(nums)
+    return expected_sum - actual_sum
+Answer 2:
+python
+Copy code
+def find_missing_number(nums):
+    nums_set = set(nums)
+    for i in range(1, len(nums) + 2):
+        if i not in nums_set:
+            return i
+Check for Palindrome
+Write a function to check whether a given string is a palindrome (the string reads the same forward and backward).
+
+Example Input: "racecar"
+Example Output: True
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def is_palindrome(s):
+    return s == s[::-1]
+Answer 2:
+python
+Copy code
+def is_palindrome(s):
+    left, right = 0, len(s) - 1
+    while left < right:
+        if s[left] != s[right]:
+            return False
+        left += 1
+        right -= 1
+    return True
+Merge Two Sorted Lists
+Given two sorted lists, merge them into one sorted list.
+
+Example Input: [1, 3, 5], [2, 4, 6]
+Example Output: [1, 2, 3, 4, 5, 6]
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def merge_sorted_lists(list1, list2):
+    return sorted(list1 + list2)
+Answer 2:
+python
+Copy code
+def merge_sorted_lists(list1, list2):
+    merged_list = []
+    i, j = 0, 0
+    while i < len(list1) and j < len(list2):
+        if list1[i] < list2[j]:
+            merged_list.append(list1[i])
+            i += 1
+        else:
+            merged_list.append(list2[j])
+            j += 1
+    merged_list.extend(list1[i:])
+    merged_list.extend(list2[j:])
+    return merged_list
+Find Duplicates in a List
+Write a function that returns all duplicates in an input list.
+
+Example Input: [1, 2, 3, 1, 2, 4]
+Example Output: [1, 2]
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def find_duplicates(nums):
+    return [num for num in set(nums) if nums.count(num) > 1]
+Answer 2:
+python
+Copy code
+def find_duplicates(nums):
+    seen = set()
+    duplicates = []
+    for num in nums:
+        if num in seen:
+            duplicates.append(num)
+        else:
+            seen.add(num)
+    return duplicates
+Fibonacci Sequence
+Write a function to print the Fibonacci sequence up to the nth number.
+
+Example Input: 6
+Example Output: [0, 1, 1, 2, 3, 5]
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def fibonacci(n):
+    fib_sequence = [0, 1]
+    for i in range(2, n):
+        fib_sequence.append(fib_sequence[-1] + fib_sequence[-2])
+    return fib_sequence
+Answer 2:
+python
+Copy code
+def fibonacci(n):
+    a, b = 0, 1
+    sequence = [a]
+    for _ in range(1, n):
+        a, b = b, a + b
+        sequence.append(a)
+    return sequence
+Find the Longest Substring Without Repeating Characters
+Given a string, find the length of the longest substring without repeating characters.
+
+Example Input: "abcabcbb"
+Example Output: 3
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def length_of_longest_substring(s):
+    longest = 0
+    start = 0
+    seen = {}
+    for end in range(len(s)):
+        if s[end] in seen and seen[s[end]] >= start:
+            start = seen[s[end]] + 1
+        seen[s[end]] = end
+        longest = max(longest, end - start + 1)
+    return longest
+Answer 2:
+python
+Copy code
+def length_of_longest_substring(s):
+    seen = set()
+    left, max_len = 0, 0
+    for right in range(len(s)):
+        while s[right] in seen:
+            seen.remove(s[left])
+            left += 1
+        seen.add(s[right])
+        max_len = max(max_len, right - left + 1)
+    return max_len
+Count Occurrences of a Character in a String
+Write a function that counts the occurrences of a specific character in a string.
+
+Example Input: "hello", character "l"
+Example Output: 2
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def count_occurrences(s, char):
+    return s.count(char)
+Answer 2:
+python
+Copy code
+def count_occurrences(s, char):
+    count = 0
+    for c in s:
+        if c == char:
+            count += 1
+    return count
+Sum of Digits
+Write a function that takes a number as input and returns the sum of its digits.
+
+Example Input: 123
+Example Output: 6
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def sum_of_digits(n):
+    return sum(int(digit) for digit in str(n))
+Answer 2:
+python
+Copy code
+def sum_of_digits(n):
+    total = 0
+    while n > 0:
+        total += n % 10
+        n //= 10
+    return total
+Anagram Check
+Write a function to check if two strings are anagrams (contain the same characters in any order).
+
+Example Input: "listen", "silent"
+Example Output: True
+
+Possible Answers:
+
+Answer 1:
+python
+Copy code
+def are_anagrams(str1, str2):
+    return sorted(str1) == sorted(str2)
+Answer 2:
+python
+Copy code
+def are_anagrams(str1, str2):
+    return len(str1) == len(str2) and all(str1.count(c) == str2.count(c) for c in str1)
+Note: All responses provided by the ChatBot should be related to Python coding challenges. The ChatBot should only discuss Python programming concepts, not diverge into other topics.
